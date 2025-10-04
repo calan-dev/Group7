@@ -21,8 +21,13 @@ jobs:
       - name: Build Docker Image
         run: docker build -t devopsimage .
 
-      - name: Run image
-        run: docker run --name devopscontainer -d devopsimage
+      - name: Setup Docker network and MongoDB
+        run: |
+          docker network create --driver bridge group7-net
+          docker run -d --name mongo-dbserver --network group7-net mongo
+
+      - name: Run application container
+        run: docker run --network group7-net --name devopscontainer -d devopsimage
 
       - name: View logs
         run: docker logs devopscontainer
