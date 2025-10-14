@@ -1,0 +1,16 @@
+@startuml
+actor "Report user" as User
+
+rectangle "Population Reporting System" {
+  usecase "Get countries by population\n(World / Continent / Region)" as GetCountries
+  usecase "Display report" as ShowReport
+}
+
+rectangle "Database" as DB
+
+User - GetCountries
+
+GetCountries ..> ShowReport : <<include>>
+
+GetCountries - DB
+@enduml
