@@ -24,7 +24,7 @@ jobs:
       - name: Create network and start Mongo
         run: |
           docker network create --driver bridge group7-net || true
-          docker run -d --name mongo-dbserver --network group7-net mongo:8
+          docker run -d --name mongo-dbserver --network group7-net mongo
 
 
       - name: Run application
