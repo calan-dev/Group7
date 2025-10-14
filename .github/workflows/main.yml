@@ -10,36 +10,26 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Set up JDK 17
-        uses: actions/setup-java@v2
+        uses: actions/setup-java@v4
         with:
           java-version: '17'
-          distribution: 'adopt'
+          distribution: 'temurin'
 
       - name: Package with Maven
         run: mvn -DskipTests package
 
-      - name: Show built artifacts (diagnostic)
-        run: ls -la target
-
-      - name: Build Docker image
+      - name: Build Docker Image
         run: docker build -t devopsimage .
 
-      - name: Setup Docker network and MongoDB
+      - name: Create network and start Mongo
         run: |
           docker network create --driver bridge group7-net || true
           docker run -d --name mongo-dbserver --network group7-net mongo
-          # wait for Mongo to accept connections
-          for i in {1..12}; do
-            if docker exec mongo-dbserver mongosh --quiet --eval "db.adminCommand({ ping: 1 })" >/dev/null 2>&1; then
-              echo "MongoDB is ready!"
-              break
-            fi
-            echo "Waiting for MongoDB..."
-            sleep 5
-          done
 
-      - name: Run application container (foreground)
-        run: docker run --rm --network group7-net --name devopscontainer devopsimage
 
-      - name: View logs
-        run: docker logs devopscontainer || true
+      - name: Run application
+        run: |
+          docker run \
+            --network group7-net \
+            --name devopscontainer \
+            devopsimage
