@@ -1,0 +1,15 @@
+@startuml
+actor "User" as User
+
+rectangle "Population Reporting System" {
+  usecase "View overall population\n(World / Continent / Region / Country / District / City)" as OverallPop
+  usecase "Display Data" as ShowData
+}
+
+rectangle "Database" as DB
+
+User - OverallPop
+
+OverallPop - DB
+OverallPop --> ShowData : <<include>>
+@enduml

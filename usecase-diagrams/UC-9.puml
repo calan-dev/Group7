@@ -1,0 +1,15 @@
+@startuml
+actor "User" as User
+
+rectangle "Population Reporting System" {
+  usecase "View populations (language speakers)\nChinese / English / Hindi / Spanish / Arabic\n(+ % of world population)" as LangSpeakers
+  usecase "Display Data" as ShowData
+}
+
+rectangle "Database" as DB
+
+User - LangSpeakers
+
+LangSpeakers - DB
+LangSpeakers --> ShowData : <<include>>
+@enduml
