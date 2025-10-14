@@ -1,4 +1,4 @@
-# Code of Conduct
+ Code of Conduct
 
 We are committed to maintaining a professional, respectful, and ethical environment for everyone involved in this project. All contributors are expected to adhere to the following principles:
 
