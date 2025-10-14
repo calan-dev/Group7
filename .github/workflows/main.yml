@@ -26,6 +26,7 @@ jobs:
           docker network create --driver bridge group7-net || true
           docker run -d --name mongo-dbserver --network group7-net mongo:8
 
+
       - name: Run application
         run: |
           docker run \
