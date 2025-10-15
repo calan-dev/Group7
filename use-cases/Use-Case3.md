@@ -2,7 +2,7 @@
 
 ## Goal in Context
 
-As a User I want to produce a report on the populations of countries in a (world/continent/region/country/district) organised by largest to smallest.
+As a User I want to produce a report on the populations of cities in a (world/continent/region/country/district) organised by largest to smallest.
 
 ## Scope
 
