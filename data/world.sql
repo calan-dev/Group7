@@ -65,7 +65,7 @@ INSERT INTO `city` VALUES (11,'Groningen','NLD','Groningen',172701);
 INSERT INTO `city` VALUES (12,'Breda','NLD','Noord-Brabant',160398);
 INSERT INTO `city` VALUES (13,'Apeldoorn','NLD','Gelderland',153491);
 INSERT INTO `city` VALUES (14,'Nijmegen','NLD','Gelderland',152463);
-INSERT INTO `city` VALUES (15,'Enschede','NLD','Overijssel',149544);
+INSERT INTO `city` VALUES (15,'Ensched','NLD','Overijssel',149544);
 INSERT INTO `city` VALUES (16,'Haarlem','NLD','Noord-Holland',148772);
 INSERT INTO `city` VALUES (17,'Almere','NLD','Flevoland',142465);
 INSERT INTO `city` VALUES (18,'Arnhem','NLD','Gelderland',138020);
