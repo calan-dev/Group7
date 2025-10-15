@@ -18,16 +18,28 @@ jobs:
       - name: Package with Maven
         run: mvn -DskipTests package
 
-      - name: Build Docker Image
+      - name: Show built artifacts (diagnostic)
+        run: ls -la target
+
+      - name: Build Docker image
         run: docker build -t devopsimage .
 
       - name: Setup Docker network and MongoDB
         run: |
-          docker network create --driver bridge group7-net
+          docker network create --driver bridge group7-net || true
           docker run -d --name mongo-dbserver --network group7-net mongo
+          # wait for Mongo to accept connections
+          for i in {1..12}; do
+            if docker exec mongo-dbserver mongosh --quiet --eval "db.adminCommand({ ping: 1 })" >/dev/null 2>&1; then
+              echo "MongoDB is ready!"
+              break
+            fi
+            echo "Waiting for MongoDB..."
+            sleep 5
+          done
 
-      - name: Run application container
-        run: docker run --network group7-net --name devopscontainer -d devopsimage
+      - name: Run application container (foreground)
+        run: docker run --rm --network group7-net --name devopscontainer devopsimage
 
       - name: View logs
-        run: docker logs devopscontainer
+        run: docker logs devopscontainer || true
