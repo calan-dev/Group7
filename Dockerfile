@@ -1,4 +1,4 @@
-FROM openjdk:latest
-COPY ./target/GroupProject-1.0-SNAPSHOT-jar-with-dependencies.jar /tmp
-WORKDIR /tmp
-ENTRYPOINT ["java", "-jar", "GroupProject-1.0-SNAPSHOT-jar-with-dependencies.jar"]
+FROM openjdk:17-jdk-slim
+COPY target/*-jar-with-dependencies.jar /app/app.jar
+WORKDIR /app
+ENTRYPOINT ["java", "-jar", "app.jar"]
