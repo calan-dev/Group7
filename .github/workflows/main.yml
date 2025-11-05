@@ -21,15 +21,28 @@ jobs:
       - name: Build Docker Image
         run: docker build -t devopsimage .
 
-      - name: Create network and start Mongo
+      - name: Create network and start MySQL
         run: |
-          docker network create --driver bridge group7-net || true
-          docker run -d --name mongo-dbserver --network group7-net mongo
-
+            docker network create --driver bridge group7-net || true
+            docker run -d \
+              --name mysql-db \
+              --network group7-net \
+              -e MYSQL_ROOT_PASSWORD=rootpass \
+              -e MYSQL_DATABASE=world \
+              -e MYSQL_USER=appuser \
+              -e MYSQL_PASSWORD=apppass \
+              mysql:8.0
+      
+      
 
       - name: Run application
         run: |
-          docker run \
-            --network group7-net \
-            --name devopscontainer \
-            devopsimage
+            docker run \
+              --network group7-net \
+              --name devopscontainer \
+              -e DB_HOST=mysql-db \
+              -e DB_PORT=3306 \
+              -e DB_NAME=world \
+              -e DB_USER=appuser \
+              -e DB_PASS=apppass \
+              devopsimage
