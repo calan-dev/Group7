@@ -1,31 +1,37 @@
 package com.napier.sem;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 
-import com.mongodb.MongoClient;
-import com.mongodb.client.MongoDatabase;
-import com.mongodb.client.MongoCollection;
-import org.bson.Document;
+public class App {
+    public static void main(String[] args) throws Exception {
 
-public class App
-{
-    public static void main(String[] args)
-    {
-        // Connect to MongoDB
-        MongoClient mongoClient = new MongoClient("mongo-dbserver");
-        // Get a database - will create when we use it
-        MongoDatabase database = mongoClient.getDatabase("mydb");
-        // Get a collection from the database
-        MongoCollection<Document> collection = database.getCollection("test");
-        // Create a document to store
-        Document doc = new Document("name", "Kevin Sim")
-                .append("class", "DevOps")
-                .append("year", "2024")
-                .append("result", new Document("CW", 95).append("EX", 85));
-        // Add document to collection
-        collection.insertOne(doc);
+        //creates new instance of databasemanager to connect to mysql
+        DatabaseManager db = new DatabaseManager();
 
-        // Check document in collection
-        Document myDoc = collection.find().first();
-        System.out.println(myDoc.toJson());
+        try {
+            //connects to db
+            db.connect();
+
+            // sql query
+            String sql = "SELECT Name, Population FROM country ORDER BY Population DESC LIMIT 5"; // current query gets top 5 countries by population and orders descending
+
+
+                // getConnection() gets the active connection object
+                // prepareStatement() makes the sql string into a PreparedStatement
+                //executeQuery() then runs the PreparedStatement
+            try (Connection c = db.getConnection();
+                 PreparedStatement ps = c.prepareStatement(sql);
+                 ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    System.out.println(rs.getString("Name") + " : " + rs.getLong("Population"));
+                }
+            }
+        } finally {
+            //closes db
+            db.disconnect();
+        }
     }
 }
+
