@@ -38,6 +38,17 @@ jobs:
       - name: Install MySQL client
         run: sudo apt-get update && sudo apt-get install -y mysql-client
 
+      - name: Wait for MySql and import data
+        run: |
+          for i in {1..60}; do
+            if mysql -h 127.0.0.1 -u root -proot -e "SELECT 1" &>/dev/null; then
+              echo "MySQL is ready"; break
+            fi
+            sleep 2
+          done
+          
+          mysql -h 127.0.0.1 -u root -proot world < data/world.sql
+
       - name: Package with Maven
         run: mvn -B -DskipTests package
 
