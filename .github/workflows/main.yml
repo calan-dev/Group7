@@ -5,6 +5,26 @@ jobs:
   build:
     name: Group Project
     runs-on: ubuntu-22.04
+
+    services:
+      #begin MySql database container
+      mysql:
+        image: mysql:8.0
+        ports: [ '3306:3306' ]
+
+        env: #env variables to configure MySql
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: world
+          MYSQL_USER: user
+          MYSQL_PASSWORD: pass
+
+        options: >-
+          --health-cmd="mysqladmin ping -proot || exit 1"
+          --health-interval=5s
+          --health-timeout=5s
+          --health-retries=60
+          
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -15,21 +35,22 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
+      - name: Install MySQL client
+        run: sudo apt-get update && sudo apt-get install -y mysql-client
+
       - name: Package with Maven
-        run: mvn -DskipTests package
+        run: mvn -B -DskipTests package
 
       - name: Build Docker Image
         run: docker build -t devopsimage .
 
-      - name: Create network and start Mongo
-        run: |
-          docker network create --driver bridge group7-net || true
-          docker run -d --name mongo-dbserver --network group7-net mongo
-
-
       - name: Run application
         run: |
-          docker run \
-            --network group7-net \
-            --name devopscontainer \
+          docker run --rm \
+            --network host \
+            -e DB_HOST=127.0.0.1 \
+            -e DB_PORT=3306 \
+            -e DB_NAME=world \
+            -e DB_USER=user \
+            -e DB_PASS=pass \
             devopsimage
