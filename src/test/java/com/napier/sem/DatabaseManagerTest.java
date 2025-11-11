@@ -20,7 +20,7 @@ public class DatabaseManagerTest {
     }
 
     @Test
-    @DisplayName("Connect should establish a non-null connection")
+
     void testConnectEstablishesConnection() throws SQLException {
         db.connect();
         Connection conn = db.getConnection();
@@ -29,7 +29,7 @@ public class DatabaseManagerTest {
     }
 
     @Test
-    @DisplayName("Disconnect should safely close the connection")
+
     void testDisconnectClosesConnection() throws SQLException {
         db.connect();
         db.disconnect();
