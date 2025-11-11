@@ -65,3 +65,5 @@ jobs:
             -e DB_USER=user \
             -e DB_PASS=pass \
             devopsimage
+      - name: Unit Tests
+        run: mvn -Dtest=com.napier.sem.DatabaseManagerTest test
