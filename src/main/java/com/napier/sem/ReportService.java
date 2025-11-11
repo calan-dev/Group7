@@ -27,6 +27,7 @@ public class ReportService {
 
         Connection c = db.getConnection();
 
+
         try (PreparedStatement ps = c.prepareStatement(sql.toString())) {
             int i = 1;
             if (scope == Scope.CONTINENT || scope == Scope.REGION) ps.setString(i++, value);

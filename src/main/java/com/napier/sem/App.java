@@ -35,7 +35,6 @@ public class App {
         } finally {
             db.disconnect();
         }
-
     }
 
     //print the results
