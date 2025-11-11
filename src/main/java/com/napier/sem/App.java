@@ -1,37 +1,51 @@
 package com.napier.sem;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+import java.util.List;
 
 public class App {
-    public static void main(String[] args) throws Exception {
-
-        //creates new instance of databasemanager to connect to mysql
+    public static void main(String[] args) {
         DatabaseManager db = new DatabaseManager();
 
         try {
-            //connects to db
             db.connect();
-
-            // sql query
-            String sql = "SELECT Name, Population FROM country ORDER BY Population DESC LIMIT 5"; // current query gets top 5 countries by population and orders descending
+            ReportService service = new ReportService(db);
 
 
-                // getConnection() gets the active connection object
-                // prepareStatement() makes the sql string into a PreparedStatement
-                //executeQuery() then runs the PreparedStatement
-            try (Connection c = db.getConnection();
-                 PreparedStatement ps = c.prepareStatement(sql);
-                 ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    System.out.println(rs.getString("Name") + " : " + rs.getLong("Population"));
-                }
-            }
+            /*
+            As a report user I want to produce a report on the populations of countries in a
+            (world/continent/region) so that I can see a report the countries organised by largest to smallest.
+            */
+
+            List<Country> world = service.countriesByPopulation(Scope.WORLD, null, null);
+            printCountries("Countries in the World Largest to Smallest", world);
+
+            /*
+            As a Report User I want to produce a report on the populations of countries in a (world/continent/region)
+            so that I can view the top N countries ranked by population,
+            where N is a number I choose.
+            */
+
+            List<Country> asia = service.countriesByPopulation(Scope.CONTINENT, "Asia", 5);
+            printCountries("Top 5 Countries in Asia", asia);
+
+
+        } catch (Exception e) {
+            System.err.println("Error: " + e.getMessage());
+
         } finally {
-            //closes db
             db.disconnect();
+        }
+
+    }
+
+    //print the results
+    private static void printCountries(String title, List<Country> countries) {
+        System.out.println("\n" + title + "\n");
+        System.out.printf("%-45s %-15s %-25s %12s%n",
+                "Country", "Continent", "Region", "Population");
+        for (Country c : countries) {
+            System.out.printf("%-45s %-15s %-25s %12d%n",
+                    c.name(), c.continent(), c.region(), c.population());
         }
     }
 }
-
