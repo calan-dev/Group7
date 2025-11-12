@@ -13,23 +13,19 @@ public class DatabaseManagerTest {
     void setup() {
         db = new DatabaseManager();
     }
-
     @AfterEach
     void tearDown() {
         db.disconnect();
     }
 
     @Test
-
     void testConnectEstablishesConnection() throws SQLException {
         db.connect();
         Connection conn = db.getConnection();
-        assertNotNull(conn, "Connection should not be null after connect()");
-        assertFalse(conn.isClosed(), "Connection should be open after connect()");
+        assertNotNull(conn);
+        assertFalse(conn.isClosed());
     }
-
     @Test
-
     void testDisconnectClosesConnection() throws SQLException {
         db.connect();
         db.disconnect();
@@ -37,9 +33,7 @@ public class DatabaseManagerTest {
         // The connection reference still exists, but should now be closed
         assertTrue(conn.isClosed(), "Connection should be closed after disconnect()");
     }
-
     @Test
-    @DisplayName("getenv should return default when env var not set")
     void testDefaultEnvironmentValues() throws Exception {
         // Reflection trick to test private method
         var method = DatabaseManager.class.getDeclaredMethod("getenv", String.class, String.class);
