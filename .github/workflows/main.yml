@@ -67,3 +67,6 @@ jobs:
             devopsimage
       - name: Unit Tests
         run: mvn -Dtest="com.napier.sem.DatabaseManagerTest,com.napier.sem.ReportServiceTest" test
+
+      - name: Integration Tests
+        run: mvn -Dtest=com.napier.sem.IntegrationTests test
