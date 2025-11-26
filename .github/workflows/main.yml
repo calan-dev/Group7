@@ -1,6 +1,7 @@
 name: A workflow for Group Project
 on: push
-
+permissions:
+  contents: write
 jobs:
   build:
     name: Group Project
