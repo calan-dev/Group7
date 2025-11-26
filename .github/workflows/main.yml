@@ -1,5 +1,6 @@
 name: A workflow for Group Project
 on: push
+## gives permissions to the workflow to prevent error that the release tag cant be made
 permissions:
   contents: write
 jobs:
@@ -72,6 +73,7 @@ jobs:
       - name: Integration Tests
         run: mvn -Dtest=com.napier.sem.IntegrationTests test
 
+      ##creates and deploys a release
       - name: Deploy Release
         uses: marvinpinto/action-automatic-releases@latest
         with:

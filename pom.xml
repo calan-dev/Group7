@@ -40,6 +40,7 @@
 
     <build>
         <plugins>
+            <!-- Disables normal jar creation -->
             <plugin>
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>3.2.0</version>
@@ -60,7 +61,7 @@
                     <useModulePath>false</useModulePath>
                 </configuration>
             </plugin>
-
+            <!-- builds fat jar with all dependencies this will create the release -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
