@@ -53,7 +53,7 @@ jobs:
 
       - name: Run application (generate markdown)
         run: |
-          docker run --name reportsapp \
+          docker run --rm --name reportsapp \
             --network host \
             -e DB_HOST=127.0.0.1 \
             -e DB_PORT=3306 \
@@ -67,10 +67,6 @@ jobs:
 
       - name: Integration Tests
         run: mvn -Dtest=com.napier.sem.IntegrationTests test
-
-      ############################################################
-      # LAB 08 DEPLOYMENT STEPS
-      ############################################################
 
       - name: Copy Markdown Reports From Container
         run: |
