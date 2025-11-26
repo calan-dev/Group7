@@ -21,7 +21,7 @@ public class App
                 .append("class", "DevOps")
                 .append("year", "2024")
                 .append("result", new Document("CW", 95).append("EX", 85));
-        // Add document to collection
+        // Add document to collection ---
         collection.insertOne(doc);
 
         // Check document in collection
