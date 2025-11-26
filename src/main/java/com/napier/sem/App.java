@@ -10,6 +10,34 @@ public class App {
             db.connect();
             ReportService service = new ReportService(db);
 
+            var topCitiesJapan = service.topNCitiesInCountry("Japan", 10);
+            MarkdownWriter.writeMarkdownTable(
+                    "Top10CitiesJapan.md",
+                    List.of("Name", "Country", "District", "Population"),
+                    topCitiesJapan.stream().map(c ->
+                            List.of(c.name(), c.country(), c.district(), String.valueOf(c.population()))
+                    ).toList()
+            );
+
+            var topCountriesAsia = service.topNCountriesInContinent("Asia", 5);
+            MarkdownWriter.writeMarkdownTable(
+                    "Top5CountriesAsia.md",
+                    List.of("Name", "Continent", "Region", "Population"),
+                    topCountriesAsia.stream().map(c ->
+                            List.of(c.name(), c.continent(), c.region(), String.valueOf(c.population()))
+                    ).toList()
+            );
+
+            var capsWesternEurope = service.capitalCitiesInRegion("Western Europe");
+            MarkdownWriter.writeMarkdownTable(
+                    "CapitalCitiesWesternEurope.md",
+                    List.of("Name", "Country", "Population"),
+                    capsWesternEurope.stream().map(c ->
+                            List.of(c.name(), c.country(), String.valueOf(c.population()))
+                    ).toList()
+            );
+
+
 
             /*
             As a report user I want to produce a report on the populations of countries in a

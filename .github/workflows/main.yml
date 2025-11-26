@@ -70,3 +70,23 @@ jobs:
 
       - name: Integration Tests
         run: mvn -Dtest=com.napier.sem.IntegrationTests test
+
+      - name: Copy Markdown Reports From Container
+        run: |
+            mkdir -p reports
+            docker container cp reportsapp:/tmp/reports ./reports || echo "No markdown reports generated"
+
+      - name: Deploy Release JAR
+        uses: marvinpinto/action-automatic-releases@latest
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          prerelease: false
+          automatic_release_tag: "latest"
+          files: |
+                  ./target/*.jar
+
+      - name: Deploy Markdown Reports to Branch
+        uses: JamesIves/github-pages-deploy-action@v4.2.5
+        with:
+            branch: reports
+            folder: reports
