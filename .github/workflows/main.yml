@@ -7,23 +7,19 @@ jobs:
     runs-on: ubuntu-22.04
 
     services:
-      #begin MySql database container
       mysql:
         image: mysql:8.0
-        ports: [ '3306:3306' ]
-
-        env: #env variables to configure MySql
+        ports: ['3306:3306']
+        env:
           MYSQL_ROOT_PASSWORD: root
           MYSQL_DATABASE: world
           MYSQL_USER: user
           MYSQL_PASSWORD: pass
-
         options: >-
           --health-cmd="mysqladmin ping -proot || exit 1"
           --health-interval=5s
           --health-timeout=5s
           --health-retries=60
-          
 
     steps:
       - name: Checkout
@@ -46,7 +42,7 @@ jobs:
             fi
             sleep 2
           done
-          
+
           mysql -h 127.0.0.1 -u root -proot world < data/world.sql
 
       - name: Package with Maven
@@ -55,9 +51,9 @@ jobs:
       - name: Build Docker Image
         run: docker build -t devopsimage .
 
-      - name: Run application
+      - name: Run application (generate markdown)
         run: |
-          docker run --rm \
+          docker run --name reportsapp \
             --network host \
             -e DB_HOST=127.0.0.1 \
             -e DB_PORT=3306 \
@@ -65,16 +61,21 @@ jobs:
             -e DB_USER=user \
             -e DB_PASS=pass \
             devopsimage
+
       - name: Unit Tests
         run: mvn -Dtest="com.napier.sem.DatabaseManagerTest,com.napier.sem.ReportServiceTest" test
 
       - name: Integration Tests
         run: mvn -Dtest=com.napier.sem.IntegrationTests test
 
+      ############################################################
+      # LAB 08 DEPLOYMENT STEPS
+      ############################################################
+
       - name: Copy Markdown Reports From Container
         run: |
-            mkdir -p reports
-            docker container cp reportsapp:/tmp/reports ./reports || echo "No markdown reports generated"
+          mkdir -p reports
+          docker container cp reportsapp:/tmp/reports ./reports || echo "No markdown reports generated"
 
       - name: Deploy Release JAR
         uses: marvinpinto/action-automatic-releases@latest
@@ -82,11 +83,10 @@ jobs:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           prerelease: false
           automatic_release_tag: "latest"
-          files: |
-                  ./target/*.jar
+          files: ./target/app.jar
 
       - name: Deploy Markdown Reports to Branch
         uses: JamesIves/github-pages-deploy-action@v4.2.5
         with:
-            branch: reports
-            folder: reports
+          branch: reports
+          folder: reports
